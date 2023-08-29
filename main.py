@@ -6,6 +6,7 @@ from typing import Union
 import ssl
 from pydantic import BaseModel
 # from dotenv import load_dotenv , find_dotenv
+from fastapi.middleware.cors import CORSMiddleware
 
 class Data(BaseModel):
     name: str
@@ -20,6 +21,16 @@ app = FastAPI()
 # dotenv_path = find_dotenv()
 # load_dotenv(dotenv_path)
 
+origins = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 EMAIL_ADDRESS = 'abhishek13shadow@gmail.com'
 EMAIL_PASSWORD = 'rsqoztvahmcbxbdu'
 EMAIL_RECIEVER = 'agblion9@gmail.com'
@@ -28,9 +39,9 @@ EMAIL_RECIEVER = 'agblion9@gmail.com'
 # EMAIL_PASSWORD = os.getenv("EMAIL_PASS")
 # EMAIL_RECIEVER = os.getenv("EMAIL_RECIEVER")
 
-@app.post("/")
-def read_root(data : Data):
-    return {"Hello": data}
+@app.get("/")
+def read_root():
+    return {"Hello": "world"}
 
 
 @app.post("/send")

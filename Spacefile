@@ -4,6 +4,8 @@ micros:
   - name: mywebsiteapi
     src: ./
     engine: python3.9
+    public_routes:
+      - "/*"
     primary: true
     run: uvicorn main:app
     dev: .venv/bin/uvicorn main:app --reload
