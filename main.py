@@ -2,24 +2,13 @@ import json
 import os
 import smtplib
 from email.message import EmailMessage
-from typing import Union
 import ssl
-from pydantic import BaseModel
-# from dotenv import load_dotenv , find_dotenv
+from dotenv import load_dotenv 
 from fastapi.middleware.cors import CORSMiddleware
-
-class Data(BaseModel):
-    name: str
-    organisation: str
-    email: str
-    phone: int = None
-    comment: str = None
-
 from fastapi import FastAPI , Request
 
+
 app = FastAPI()
-# dotenv_path = find_dotenv()
-# load_dotenv(dotenv_path)
 
 origins = ["*"]
 
@@ -30,14 +19,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+load_dotenv('.env')
 
-EMAIL_ADDRESS = 'abhishek13shadow@gmail.com'
-EMAIL_PASSWORD = 'rsqoztvahmcbxbdu'
-EMAIL_RECIEVER = 'agblion9@gmail.com'
-
-# EMAIL_ADDRESS = os.getenv('EMAIL_USER')
-# EMAIL_PASSWORD = os.getenv("EMAIL_PASS")
-# EMAIL_RECIEVER = os.getenv("EMAIL_RECIEVER")
+EMAIL_ADDRESS = os.getenv('EMAIL_ADDRESS')
+EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
+EMAIL_RECIEVER = os.getenv("EMAIL_RECIEVER")
 
 @app.get("/")
 def read_root():
@@ -46,10 +32,12 @@ def read_root():
 
 @app.post("/send")
 async def read_item(request : Request):
-    anydata = await request.json()  # converts the request body to dict object
+    dataobj = await request.json()  # converts the request body to dict object
+    datadata = dataobj['data']
+    anydata = json.loads(datadata['data'])
     # print(anydata)
     msg = EmailMessage()
-    msg['Subject'] = 'trial email no.5'
+    msg['Subject'] = f'{anydata["name"]} visited my website'
     msg['From'] = EMAIL_ADDRESS
     msg['To'] = EMAIL_RECIEVER
 
